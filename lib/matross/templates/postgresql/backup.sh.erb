@@ -1,0 +1,25 @@
+#!/bin/bash
+
+SRCDIR='/tmp/<%= application %>-pg-backup'
+BUCKET=<%= pg_backup_bucket %>
+PREFIX=<%= File.join(pg_backup_prefix, '') %>
+
+# database access details
+DB=<%= postgresql_database%>
+
+# backup name
+BACKUP_NAME="$(date +'bkp%Y%m%d%H%M')"
+
+# make the temp directory if it doesn't exist and cd into it
+mkdir -p ${SRCDIR}
+cd ${SRCDIR}
+
+# mysql dump
+pg_dump ${DB} > ${BACKUP_NAME}.sql
+tar --create --gzip --absolute-names --file ${BACKUP_NAME}.tar.gz ${BACKUP_NAME}.sql
+
+# upload to s3
+s3cmd put ${SRCDIR}/${BACKUP_NAME}.tar.gz s3://${BUCKET}/${PREFIX}
+
+# clean old files
+find ${SRCDIR}/* -mtime +5 -exec rm {} \;

@@ -2,7 +2,6 @@
 
 SRCDIR='/tmp/<%= application %>-mysql-backup'
 BUCKET=<%= mysql_backup_bucket %>
-PREFIX=<%= File.join(mysql_backup_prefix, '') %>
 
 # database access details
 HOST=<%= mysql_host %>
@@ -22,7 +21,7 @@ mysqldump -h${HOST} -u${USER} --force ${DB} > ${BACKUP_NAME}.sql
 tar --create --gzip --absolute-names --file ${BACKUP_NAME}.tar.gz ${BACKUP_NAME}.sql
 
 # upload to s3
-s3cmd put ${SRCDIR}/${BACKUP_NAME}.tar.gz s3://${BUCKET}/${PREFIX}
+s3cmd put ${SRCDIR}/${BACKUP_NAME}.tar.gz s3://${BUCKET}
 
 # clean old files
 find ${SRCDIR}/* -mtime +5 -exec rm {} \;

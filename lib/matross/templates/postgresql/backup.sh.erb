@@ -1,8 +1,8 @@
 #!/bin/bash
 
-SRCDIR='/tmp/<%= application %>-pg-backup'
-BUCKET=<%= pg_backup_bucket %>
-PREFIX=<%= File.join(pg_backup_prefix, '') %>
+SRCDIR='/tmp/<%= application %>-postgresql-backup'
+BUCKET=<%= postgresql_backup_bucket %>
+PREFIX=<%= File.join(postgresql_backup_prefix, '') %>
 
 # database access details
 DB=<%= postgresql_database%>
